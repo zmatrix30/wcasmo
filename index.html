@@ -1,1236 +1,264 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZMATRIX - Global Intelligence Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>ZMATRIX - Global Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Exo+2:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #000000;
-            --main-color: #00F0FF;
-            --alert-color: #ff003c;
-            --glass-bg: rgba(0, 255, 65, 0.05);
-            --glass-border: rgba(0, 255, 65, 0.2);
-            --glass-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+            --accent-blue: #87CEEB; /* Небесно-голубой */
+            --z-green: #00FF41; /* Тот самый зеленый Z */
+            --glass: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, #2b1055, #7597de); /* Резервный */
+            --photo-bg: linear-gradient(to bottom, #f3904f, #3b4371); /* Как на твоем фото */
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Fira Code', monospace;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            background-color: var(--bg-color);
-            color: var(--main-color);
-            overflow: hidden; /* Prevent scrolling of the whole page */
-            height: 100vh;
+            font-family: 'Exo 2', sans-serif;
+            background: #2b1055; /* Цвет основы */
+            background: linear-gradient(to bottom, #f3904f, #e96443, #a044ff, #6a3093);
+            background-attachment: fixed;
+            color: var(--accent-blue);
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Digital Rain Canvas */
-        #matrix-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
+        /* --- ПЕРВАЯ СТРАНИЦА (WELCOME) --- */
+        #welcome-page {
             height: 100vh;
-            z-index: -1;
-            opacity: 0.3; /* Subtle behind the interface */
-        }
-
-        /* Glassmorphism Classes */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            border-radius: 8px;
-        }
-        
-        /* Glitch Effect */
-        .glitch {
-            position: relative;
-            display: inline-block;
-        }
-        .glitch::before, .glitch::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.8;
-            pointer-events: none;
-        }
-        .glitch::before {
-            left: 2px;
-            text-shadow: -1px 0 var(--alert-color);
-            clip: rect(24px, 550px, 90px, 0);
-            animation: glitch-anim-2 3s infinite linear alternate-reverse;
-        }
-        .glitch::after {
-            left: -2px;
-            text-shadow: -1px 0 #00ffff;
-            clip: rect(85px, 550px, 140px, 0);
-            animation: glitch-anim 2.5s infinite linear alternate-reverse;
-        }
-        @keyframes glitch-anim {
-            0% { clip: rect(61px, 9999px, 52px, 0); }
-            5% { clip: rect(33px, 9999px, 144px, 0); }
-            10% { clip: rect(121px, 9999px, 115px, 0); }
-            15% { clip: rect(144px, 9999px, 162px, 0); }
-            20% { clip: rect(62px, 9999px, 180px, 0); }
-            25% { clip: rect(34px, 9999px, 42px, 0); }
-            30% { clip: rect(147px, 9999px, 179px, 0); }
-            35% { clip: rect(99px, 9999px, 63px, 0); }
-            40% { clip: rect(188px, 9999px, 122px, 0); }
-            45% { clip: rect(154px, 9999px, 14px, 0); }
-            50% { clip: rect(63px, 9999px, 37px, 0); }
-            55% { clip: rect(161px, 9999px, 147px, 0); }
-            60% { clip: rect(109px, 9999px, 175px, 0); }
-            65% { clip: rect(157px, 9999px, 88px, 0); }
-            70% { clip: rect(173px, 9999px, 131px, 0); }
-            75% { clip: rect(62px, 9999px, 70px, 0); }
-            80% { clip: rect(24px, 9999px, 153px, 0); }
-            85% { clip: rect(138px, 9999px, 73px, 0); }
-            90% { clip: rect(41px, 9999px, 174px, 0); }
-            95% { clip: rect(18px, 9999px, 5px, 0); }
-            100% { clip: rect(100px, 9999px, 113px, 0); }
-        }
-        @keyframes glitch-anim-2 {
-            0% { clip: rect(120px, 9999px, 140px, 0); }
-            20% { clip: rect(20px, 9999px, 100px, 0); }
-            40% { clip: rect(150px, 9999px, 180px, 0); }
-            60% { clip: rect(80px, 9999px, 110px, 0); }
-            80% { clip: rect(10px, 9999px, 40px, 0); }
-            100% { clip: rect(170px, 9999px, 190px, 0); }
-        }
-
-        /* Access Gate */
-        #access-gate {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.5s ease-out;
+            text-align: center;
+            padding: 20px;
         }
 
-        #access-gate h1 {
-            font-size: 4rem;
-            margin-bottom: 2rem;
-            letter-spacing: 5px;
-            text-transform: uppercase;
+        .z-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            color: var(--z-green);
+            text-shadow: 0 0 20px var(--z-green);
+            margin-bottom: 10px;
         }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            transition: transform 0.1s;
-        }
-
-        .input-group input {
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--main-color);
-            color: var(--main-color);
+        .welcome-title {
             font-size: 1.5rem;
-            text-align: center;
-            padding: 0.5rem;
-            outline: none;
-            width: 300px;
             letter-spacing: 5px;
-        }
-        
-        .input-group input::placeholder {
-            color: rgba(0, 255, 65, 0.3);
+            margin-bottom: 40px;
+            color: var(--accent-blue);
         }
 
-        .btn {
-            background: rgba(0, 255, 65, 0.1);
-            color: var(--main-color);
-            border: 1px solid var(--main-color);
-            padding: 0.8rem 2rem;
-            font-size: 1.2rem;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-            backdrop-filter: blur(4px);
-        }
-
-        .btn:hover {
-            background: var(--main-color);
-            color: var(--bg-color);
-            box-shadow: 0 0 20px var(--main-color);
-        }
-
-        .error-msg {
-            color: var(--alert-color);
-            margin-top: 1rem;
-            height: 1.5rem;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-        }
-
-        /* App Layout */
-        #app-layout {
-            display: none; /* Shown after login */
-            width: 100vw;
-            height: 100vh;
-        }
-
-        /* Sidebar */
-        #sidebar {
-            width: 280px;
-            height: 100%;
-            padding: 2rem 1.5rem;
+        .auth-buttons {
             display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--glass-border);
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            z-index: 10;
-        }
-
-        .brand {
-            font-size: 2.2rem;
-            font-weight: bold;
-            margin-bottom: 3rem;
-            text-align: center;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 1rem;
-            color: #fff;
-            text-shadow: 0 0 10px var(--main-color);
-        }
-
-        .nav-items {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            flex-grow: 1;
-        }
-
-        .nav-item {
-            padding: 1rem;
-            cursor: pointer;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            transition: all 0.3s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 255, 65, 0.02);
-            font-size: 0.95rem;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            border-color: var(--glass-border);
-            background: rgba(0, 255, 65, 0.1);
-            box-shadow: inset 4px 0 0 var(--main-color);
-            transform: translateX(5px);
-        }
-
-        .upgrade-btn {
-            margin-top: auto;
-            border-color: rgba(255, 215, 0, 0.3);
-            color: #ffd700;
-            text-align: center;
-            display: block;
-            text-decoration: none;
-            background: rgba(255, 215, 0, 0.05);
-            padding: 1rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        
-        .upgrade-btn:hover {
-            background: rgba(255, 215, 0, 0.2);
-            color: #ffd700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-            transform: translateY(-2px);
-        }
-
-        /* Main Content Area */
-        #main-content {
-            flex-grow: 1;
-            padding: 2.5rem;
-            height: 100%;
-            overflow-y: auto;
-            position: relative;
-            z-index: 5;
-        }
-
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.5);
-            border-left: 1px solid var(--glass-border);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 255, 65, 0.3);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 255, 65, 0.6);
-        }
-
-        .view-section {
-            display: none;
-            height: 100%;
-            animation: fadeIn 0.4s ease-out forwards;
-            opacity: 0;
-        }
-
-        .view-section.active {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            opacity: 1;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        h2.section-title {
-            font-size: 2.5rem;
-            border-bottom: 2px solid var(--glass-border);
-            padding-bottom: 0.8rem;
-            text-transform: uppercase;
-            color: #fff;
-            text-shadow: 0 0 8px var(--main-color);
-        }
-
-        /* Trading Terminal View */
-        .grid-dashboard {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: auto 1fr;
-            gap: 1.5rem;
-            height: 100%;
-        }
-
-        .ticker-card {
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
+            gap: 20px;
+            flex-wrap: wrap;
             justify-content: center;
-            align-items: center;
-            gap: 0.8rem;
-            transition: transform 0.3s;
         }
-        
-        .ticker-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.2);
-        }
-        
-        .ticker-name {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            letter-spacing: 1px;
-        }
-        
-        .ticker-price {
-            font-size: 2.2rem;
+
+        .main-btn {
+            padding: 15px 40px;
+            border: 1px solid var(--accent-blue);
+            background: var(--glass);
+            color: var(--accent-blue);
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+            text-transform: uppercase;
             font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 5px rgba(255,255,255,0.5);
-        }
-        
-        .ticker-change {
-            font-size: 1.1rem;
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-            background: rgba(0,0,0,0.5);
-        }
-        .up { color: var(--main-color); border: 1px solid rgba(0, 255, 65, 0.3); }
-        .down { color: var(--alert-color); border: 1px solid rgba(255, 0, 60, 0.3); }
-
-        .calculator-panel {
-            grid-column: 1 / 2;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
         }
 
-        .panel-title {
-            font-size: 1.2rem;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 0.8rem;
-            color: #fff;
-            letter-spacing: 1px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .main-btn:hover {
+            background: var(--accent-blue);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-blue);
         }
 
-        .calc-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
-        .calc-group label {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        .calc-group input, .calc-group select {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--glass-border);
-            color: var(--main-color);
-            padding: 0.8rem;
-            font-family: 'Fira Code', monospace;
-            outline: none;
-            transition: all 0.3s;
-            border-radius: 4px;
-        }
-        
-        .calc-group input:focus, .calc-group select:focus {
-            border-color: var(--main-color);
-            box-shadow: 0 0 8px rgba(0, 255, 65, 0.3);
-            background: rgba(0, 255, 65, 0.05);
-        }
-        
-        .calc-result {
-            margin-top: auto;
-            padding: 1.2rem;
-            background: rgba(0, 255, 65, 0.05);
-            border: 1px dashed var(--main-color);
-            text-align: center;
-            border-radius: 4px;
+        /* --- ВТОРАЯ СТРАНИЦА (DASHBOARD) --- */
+        #main-app {
+            display: none;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .terminal-panel {
-            grid-column: 2 / 4;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .terminal-log {
-            flex-grow: 1;
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(0, 255, 65, 0.3);
-            padding: 1rem;
-            overflow: hidden; /* Hide scrollbar, let logic manage lines */
-            font-size: 0.9rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            position: relative;
-            border-radius: 4px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,1);
-        }
-        
-        .log-content {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-            width: 100%;
-        }
-        
-        .log-line {
-            line-height: 1.5;
-            opacity: 0.9;
-            font-family: 'Courier', monospace;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding-bottom: 0.2rem;
-            word-break: break-all;
-        }
-        
-        .log-highlight { color: #0ff; font-weight: bold; }
-        .log-alert { color: var(--alert-color); font-weight: bold; }
-        .log-execute { background: rgba(0, 255, 65, 0.2); padding: 0 0.2rem; border-radius: 2px; }
-
-        /* Politics Dumping View */
-        .politics-grid {
+        .grid-container {
             display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 1.5rem;
-            height: 100%;
-            min-height: 0;
+            grid-template-columns: 350px 1fr 350px;
+            gap: 20px;
         }
 
-        .news-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            overflow-y: auto;
-            padding-right: 0.5rem;
+        @media (max-width: 1100px) {
+            .grid-container { grid-template-columns: 1fr; }
         }
 
-        .news-card {
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            border-left: 3px solid var(--main-color);
-        }
-        
-        .news-header {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #fff;
-            line-height: 1.4;
-        }
-        
-        .news-meta {
-            font-size: 0.85rem;
-            opacity: 0.7;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
-            padding-bottom: 0.5rem;
+        .panel {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(15px);
+            margin-bottom: 20px;
         }
 
-        .sentiment-bar-container {
+        h2 { font-family: 'Orbitron', sans-serif; margin-bottom: 15px; font-size: 1rem; color: #fff; }
+
+        /* Посты */
+        .post {
+            border: 1px solid var(--glass);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .post-img {
             width: 100%;
-            height: 12px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 6px;
-            overflow: hidden;
+            height: 200px;
+            background: #333; /* Заглушка для фото */
             display: flex;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .sentiment-yes { background: var(--main-color); height: 100%; transition: width 1s ease; }
-        .sentiment-no { background: var(--alert-color); height: 100%; transition: width 1s ease; }
-        
-        .sentiment-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            font-weight: bold;
-        }
-
-        .info-dump {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            padding: 1.5rem;
-        }
-
-        .dump-stream {
-            flex-grow: 1;
-            background: rgba(0,0,0,0.6);
-            border: 1px solid var(--glass-border);
-            padding: 1rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            border-radius: 4px;
-        }
-
-        .dump-msg {
-            font-size: 0.9rem;
-            border-left: 2px solid var(--main-color);
-            padding-left: 0.8rem;
-            line-height: 1.4;
-            background: rgba(0, 255, 65, 0.03);
-            padding-top: 0.4rem;
-            padding-bottom: 0.4rem;
-            border-radius: 0 4px 4px 0;
-            animation: slideIn 0.3s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        
-        .dump-user {
-            color: #0ff;
-            font-weight: bold;
-            margin-right: 0.5rem;
-        }
-
-        .dump-input {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .dump-input input {
-            flex-grow: 1;
-            background: rgba(0,0,0,0.8);
-            border: 1px solid var(--glass-border);
-            color: var(--main-color);
-            padding: 0.8rem;
-            font-family: inherit;
-            border-radius: 4px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        
-        .dump-input input:focus {
-            border-color: var(--main-color);
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
-        }
-
-        /* Sport Pulse View */
-        .sport-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.8rem;
-        }
-
-        .match-card {
-            padding: 1.8rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .match-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--main-color);
-        }
-        
-        .league-badge {
-            position: absolute;
-            top: 0;
-            right: 0;
-            background: var(--main-color);
-            color: black;
-            padding: 0.4rem 1rem;
+            align-items: center;
+            justify-content: center;
             font-size: 0.8rem;
-            font-weight: bold;
-            border-bottom-left-radius: 12px;
-            box-shadow: -2px 2px 10px rgba(0,255,65,0.3);
+            color: #666;
+            border-bottom: 1px solid var(--glass);
         }
 
-        .match-teams {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-top: 1rem;
-            color: #fff;
+        .post-content { padding: 15px; }
+        .post-title { font-weight: bold; color: #fff; margin-bottom: 8px; }
+        .post-text { font-size: 0.9rem; line-height: 1.4; margin-bottom: 10px; }
+
+        .comments-section {
+            padding: 10px 15px;
+            background: rgba(0,0,0,0.2);
+            font-size: 0.8rem;
         }
-        
-        .score {
-            color: #0ff;
-            font-size: 2.5rem;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-            background: rgba(0,0,0,0.5);
-            padding: 0.2rem 1rem;
+
+        /* Чат */
+        .chat-box {
+            height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-right: 10px;
+        }
+
+        .chat-msg {
+            background: var(--glass);
+            padding: 10px;
             border-radius: 8px;
-            border: 1px solid rgba(0,255,255,0.2);
+            font-size: 0.85rem;
         }
 
-        .smart-money {
-            margin-top: 0.5rem;
-            padding-top: 1.2rem;
-            border-top: 1px dashed rgba(255,255,255,0.15);
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .smart-money span { 
-            color: var(--main-color); 
-            font-weight: bold; 
-            background: rgba(0,255,65,0.1);
-            padding: 0.2rem 0.6rem;
-            border-radius: 4px;
-        }
-        
-        .alert-money span {
-            color: var(--alert-color);
-            background: rgba(255,0,60,0.1);
-        }
+        .chat-user { color: var(--z-green); font-weight: bold; }
 
-        .injury-report {
-            font-size: 0.9rem;
-            color: var(--alert-color);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .injury-report::before {
-            content: '⚠';
-        }
-
-        .status-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--main-color);
-            box-shadow: 0 0 8px var(--main-color);
-            margin-right: 0.5rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; box-shadow: 0 0 8px var(--main-color); }
-            50% { opacity: 0.4; box-shadow: 0 0 2px var(--main-color); }
-            100% { opacity: 1; box-shadow: 0 0 8px var(--main-color); }
+        input {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--glass);
+            color: #fff;
+            margin-top: 10px;
+            outline: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Background Matrix Canvas -->
-    <canvas id="matrix-bg"></canvas>
-
-    <!-- Access Gate Overlay -->
-    <div id="access-gate">
-        <h1 class="glitch" data-text="ZMATRIX">ZMATRIX</h1>
-        <p style="margin-bottom: 2.5rem; font-size: 1.2rem; letter-spacing: 3px; opacity: 0.9; color: #fff;">GLOBAL INTELLIGENCE HUB</p>
+    <div id="welcome-page">
+        <div class="z-logo">ZMATRIX</div>
+        <div class="welcome-title">GLOBAL INTELLIGENCE HUB</div>
         
-        <div class="input-group">
-            <input type="password" id="access-key" placeholder="ENTER ACCESS KEY" autocomplete="off">
-            <button class="btn" id="btn-enter" onclick="verifyAccess()">INITIALIZE</button>
-            <div class="error-msg" id="error-msg"></div>
-        </div>
-        
-        <div style="position: absolute; bottom: 2rem; opacity: 0.5; font-size: 0.8rem;">
-            SECURE CONNECTION ESTABLISHED. ENCRYPTION LEVEL: MIL-SPEC.
+        <div class="auth-buttons">
+            <button class="main-btn" onclick="enterApp()">ВХОД</button>
+            <button class="main-btn" onclick="alert('Регистрация временно ограничена')">РЕГИСТРАЦИЯ</button>
+            <button class="main-btn" onclick="alert('ZMATRIX - это закрытое сообщество для анализа глобальных событий.')">О НАС</button>
         </div>
     </div>
 
-    <!-- Main Application Layout -->
-    <div id="app-layout">
-        <!-- Sidebar -->
-        <div id="sidebar">
-            <div class="brand glitch" data-text="ZMATRIX">ZMATRIX</div>
-            <ul class="nav-items">
-                <li class="nav-item active" onclick="switchView('trading-terminal')">
-                    <span>> TRADING_TERM</span>
-                    <span style="opacity: 0.5; font-size: 0.8rem;">[ONLINE]</span>
-                </li>
-                <li class="nav-item" onclick="switchView('politics-dumping')">
-                    <span>> POLITICS_DUMP</span>
-                    <span style="opacity: 0.5; font-size: 0.8rem;">[SYNCED]</span>
-                </li>
-                <li class="nav-item" onclick="switchView('sport-pulse')">
-                    <span>> SPORT_PULSE</span>
-                    <span style="opacity: 0.5; font-size: 0.8rem;">[LIVE]</span>
-                </li>
-                <li class="nav-item" onclick="switchView('innovation-news')">
-                    <span>> TECH_INNOVATION</span>
-                    <span style="opacity: 0.5; font-size: 0.8rem;">[FETCHING]</span>
-                </li>
-            </ul>
-            <a href="#" class="nav-item upgrade-btn" onclick="alert('PRO Upgrade Module encrypted. Required clearance: Lvl 5.'); return false;">
-                [ UPGRADE TO PRO ]
-            </a>
-        </div>
-
-        <!-- Main Content -->
-        <div id="main-content">
+    <div id="main-app">
+        <div class="grid-container">
             
-            <!-- Trading Terminal View -->
-            <div id="trading-terminal" class="view-section active">
-                <h2 class="section-title glitch" data-text="TRADING TERMINAL">TRADING TERMINAL</h2>
+            <div class="col">
+                <div class="panel">
+                    <h2>GLOBAL CHAT</h2>
+                    <div class="chat-box" id="global-chat">
+                        <div class="chat-msg"><span class="chat-user">System:</span> Добро пожаловать в Z-Hub.</div>
+                        <div class="chat-msg"><span class="chat-user">Alex_Core:</span> Вы видели графики волатильности? Безумие.</div>
+                        <div class="chat-msg"><span class="chat-user">Neo:</span> Следите за новостями инноваций, там будет анонс нового ИИ.</div>
+                        <div class="chat-msg"><span class="chat-user">Admin:</span> Чат модерируется. Соблюдайте конфиденциальность.</div>
+                    </div>
+                    <input type="text" placeholder="Введите сообщение...">
+                </div>
                 
-                <div class="grid-dashboard">
-                    <!-- Tickers -->
-                    <div class="glass-panel ticker-card" id="ticker-btc">
-                        <div class="ticker-name">BTC/USD <span style="font-size: 0.8rem; opacity: 0.5;">SPOT</span></div>
-                        <div class="ticker-price">$<span class="val">64,230.50</span></div>
-                        <div class="ticker-change up">+<span class="pct">2.40</span>%</div>
-                    </div>
-                    <div class="glass-panel ticker-card" id="ticker-eth">
-                        <div class="ticker-name">ETH/USD <span style="font-size: 0.8rem; opacity: 0.5;">SPOT</span></div>
-                        <div class="ticker-price">$<span class="val">3,450.20</span></div>
-                        <div class="ticker-change down">-<span class="pct">1.20</span>%</div>
-                    </div>
-                    <div class="glass-panel ticker-card" id="ticker-gold">
-                        <div class="ticker-name">XAU/USD <span style="font-size: 0.8rem; opacity: 0.5;">CMX</span></div>
-                        <div class="ticker-price">$<span class="val">2,340.10</span></div>
-                        <div class="ticker-change up">+<span class="pct">0.50</span>%</div>
-                    </div>
+                <div class="panel">
+                    <h2>COMMUNITY</h2>
+                    <p style="font-size: 0.8rem; opacity: 0.7;">Активных пользователей: 1,204<br>Последний дамп: 14 мин. назад</p>
+                </div>
+            </div>
 
-                    <!-- Calculator -->
-                    <div class="glass-panel calculator-panel">
-                        <div class="panel-title">
-                            <span>LIQUIDITY / VOLATILITY</span>
-                            <span class="status-indicator"></span>
-                        </div>
-                        <div class="calc-group">
-                            <label>> ENTRY PRICE ($)</label>
-                            <input type="number" id="entry-price" value="64000">
-                        </div>
-                        <div class="calc-group">
-                            <label>> LEVERAGE (x)</label>
-                            <input type="number" id="leverage" value="10">
-                        </div>
-                        <div class="calc-group">
-                            <label>> POSITION</label>
-                            <select id="position-type">
-                                <option value="long">LONG</option>
-                                <option value="short">SHORT</option>
-                            </select>
-                        </div>
-                        <button class="btn" style="padding: 0.8rem; margin-top: 1rem;" onclick="calculateLiquidation()">EXECUTE CALCULATION</button>
-                        
-                        <div class="calc-result">
-                            <div style="font-size: 0.9rem; margin-bottom: 0.5rem; opacity: 0.8;">ESTIMATED LIQUIDATION:</div>
-                            <strong style="font-size: 1.8rem; color: var(--alert-color); text-shadow: 0 0 10px rgba(255,0,60,0.5);">$<span id="liq-price">57,600.00</span></strong>
+            <div class="col">
+                <div class="panel">
+                    <h2>POLITICS DUMPING</h2>
+                    <div class="post">
+                        <div class="post-img">ФОТО: ГЕОПОЛИТИЧЕСКИЙ САММИТ 2026</div>
+                        <div class="post-content">
+                            <div class="post-title">Новые торговые соглашения G7</div>
+                            <div class="post-text">Аналитики предсказывают сдвиг в цепочках поставок полупроводников к лету 2026 года.</div>
+                            <div class="comments-section">> Посмотреть комментарии (12)</div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Arbitrage Scanner Terminal -->
-                    <div class="glass-panel terminal-panel">
-                        <div class="panel-title">
-                            <span>ARBITRAGE SCANNER [ACTIVE]</span>
-                            <span class="status-indicator"></span>
-                        </div>
-                        <div class="terminal-log">
-                            <div class="log-content" id="arb-log">
-                                <!-- Logs injected via JS -->
-                                <div class="log-line">Initializing ArbSec daemon... <span class="log-highlight">OK</span></div>
-                                <div class="log-line">Connecting to CEX nodes... <span class="log-highlight">CONNECTED (12 peers)</span></div>
-                                <div class="log-line" style="margin-bottom: 1rem;">Scanner routine running.</div>
-                            </div>
+                <div class="panel">
+                    <h2>SPORT PULSE</h2>
+                    <div class="post">
+                        <div class="post-img">ФОТО: РЕАЛ МАДРИД ПОБЕДА</div>
+                        <div class="post-content">
+                            <div class="post-title">Real Madrid 3 : 0 Man City</div>
+                            <div class="post-text">Невероятный матч! Реал полностью доминировал. Феде Вальверде признан игроком матча за решающий контроль центра поля.</div>
+                            <div class="comments-section">> Посмотреть комментарии (45)</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Politics Dumping View -->
-            <div id="politics-dumping" class="view-section">
-                <h2 class="section-title glitch" data-text="POLITICS DUMPING">POLITICS DUMPING</h2>
-                
-                <div class="politics-grid">
-                    <div class="news-feed">
-                        <div class="glass-panel news-card">
-                            <div class="news-meta">
-                                <span>SOURCE: DEEP_STATE_NET</span>
-                                <span style="color: #0ff;">TIME: 10:45Z</span>
-                            </div>
-                            <div class="news-header">Global Summit: Cyber-Treaty Ratification Expected?</div>
-                            <div>
-                                <div class="sentiment-bar-container">
-                                    <div class="sentiment-yes" style="width: 72%;"></div>
-                                    <div class="sentiment-no" style="width: 28%;"></div>
-                                </div>
-                                <div class="sentiment-labels">
-                                    <span style="color: var(--main-color);">YES: 72%</span>
-                                    <span style="color: var(--alert-color);">NO: 28%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="glass-panel news-card">
-                            <div class="news-meta">
-                                <span>SOURCE: WHISTLEBLOWER_09</span>
-                                <span style="color: #0ff;">TIME: 09:12Z</span>
-                            </div>
-                            <div class="news-header">Central Bank Digital Currency Rollout Accelerated by FED</div>
-                            <div>
-                                <div class="sentiment-bar-container">
-                                    <div class="sentiment-yes" style="width: 45%;"></div>
-                                    <div class="sentiment-no" style="width: 55%;"></div>
-                                </div>
-                                <div class="sentiment-labels">
-                                    <span style="color: var(--main-color);">YES: 45%</span>
-                                    <span style="color: var(--alert-color);">NO: 55%</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                         <div class="glass-panel news-card">
-                            <div class="news-meta">
-                                <span>SOURCE: ORACLE_NODE</span>
-                                <span style="color: #0ff;">TIME: 08:30Z</span>
-                            </div>
-                            <div class="news-header">Tech Giant Antitrust Ruling Leak Hits Black Markets</div>
-                            <div>
-                                <div class="sentiment-bar-container">
-                                    <div class="sentiment-yes" style="width: 85%;"></div>
-                                    <div class="sentiment-no" style="width: 15%;"></div>
-                                </div>
-                                <div class="sentiment-labels">
-                                    <span style="color: var(--main-color);">YES: 85%</span>
-                                    <span style="color: var(--alert-color);">NO: 15%</span>
-                                </div>
-                            </div>
+            <div class="col">
+                <div class="panel">
+                    <h2>INNOVATIONS</h2>
+                    <div class="post">
+                        <div class="post-img">ФОТО: NEXT-GEN PC</div>
+                        <div class="post-content">
+                            <div class="post-title">RTX 6090: Первые утечки</div>
+                            <div class="post-text">Новая архитектура обещает прирост в 40% в задачах с ИИ.</div>
+                            <div class="comments-section">> 8 комм.</div>
                         </div>
                     </div>
-                    
-                    <div class="glass-panel info-dump">
-                        <div class="panel-title">
-                            <span>LIVE INFO DUMP</span>
-                            <span class="status-indicator"></span>
-                        </div>
-                        <div class="dump-stream" id="dump-stream">
-                            <div class="dump-msg"><span class="dump-user">sysadmin:</span> Stream initialized. Monitoring keywords.</div>
-                            <div class="dump-msg"><span class="dump-user">anon_332:</span> watch the bond markets today. massive volume shift detected.</div>
-                            <div class="dump-msg"><span class="dump-user">cipher_p:</span> 72% on the treaty is too high, algorithmic manipulation confirmed on bet-markets.</div>
-                            <div class="dump-msg"><span class="dump-user">v0id:</span> CBDC rollout will squeeze the alt-coins. prepare accordingly.</div>
-                        </div>
-                        <div class="dump-input">
-                            <input type="text" id="dump-input-field" placeholder="> Input intel / dump leaks here..." autocomplete="off">
-                            <button class="btn" style="padding: 0.8rem 1.5rem;" onclick="postDump()">POST</button>
+                    <div class="post">
+                        <div class="post-img">ФОТО: AI APP</div>
+                        <div class="post-content">
+                            <div class="post-title">GPT-6 Integration</div>
+                            <div class="post-text">Приложения на базе новой модели начали понимать эмоции пользователя.</div>
+                            <div class="comments-section">> 14 комм.</div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Sport Pulse View -->
-            <div id="sport-pulse" class="view-section">
-                <h2 class="section-title glitch" data-text="SPORT PULSE">SPORT PULSE</h2>
-                
-                <div class="sport-grid">
-                    <div class="glass-panel match-card">
-                        <div class="league-badge">UCL</div>
-                        <div class="news-meta" style="border:none; padding:0; margin-bottom: -0.5rem;">
-                            <span style="color: #0ff; display: flex; align-items: center; gap: 0.5rem;">
-                                <span class="status-indicator" style="width: 6px; height: 6px; background: #0ff; box-shadow: 0 0 5px #0ff; margin:0;"></span>
-                                LIVE - 73'
-                            </span>
-                        </div>
-                        <div class="match-teams">
-                            <div>RMA</div>
-                            <div class="score">2 - 1</div>
-                            <div>MCI</div>
-                        </div>
-                        <div class="smart-money">
-                            SMART MONEY FLOW: <span>65% RMA</span>
-                        </div>
-                        <div class="injury-report">
-                            ACTIONABLE: KDB hamstring issue spotted on broadcast (71')
-                        </div>
-                    </div>
-                    
-                    <div class="glass-panel match-card">
-                        <div class="league-badge">NBA</div>
-                        <div class="news-meta" style="border:none; padding:0; margin-bottom: -0.5rem;">
-                            <span>PRE-GAME (TIP-OFF: 2H)</span>
-                        </div>
-                        <div class="match-teams">
-                            <div>LAL</div>
-                            <div class="score" style="color: #666; border-color: #333; text-shadow: none;">0 - 0</div>
-                            <div>GSW</div>
-                        </div>
-                        <div class="smart-money">
-                            SMART MONEY FLOW: <span>58% GSW OVER 225.5</span>
-                        </div>
-                        <div class="injury-report" style="color: #ffd700;">
-                            INFO: L. James (Ankle) upgraded to PROBABLE
-                        </div>
-                    </div>
-
-                    <div class="glass-panel match-card">
-                        <div class="league-badge" style="background: var(--alert-color); color: #fff;">UFC</div>
-                        <div class="news-meta" style="border:none; padding:0; margin-bottom: -0.5rem;">
-                            <span>UPCOMING - MAIN EVENT</span>
-                        </div>
-                        <div class="match-teams">
-                            <div style="font-size: 1.2rem;">MAKHACHEV</div>
-                            <div class="score" style="color: #666; border-color: #333; text-shadow: none; font-size: 1.5rem; padding: 0.2rem 0.5rem;">vs</div>
-                            <div style="font-size: 1.2rem;">OLIVEIRA</div>
-                        </div>
-                        <div class="smart-money alert-money">
-                            SMART MONEY FLOW: <span>SHARP MONEY ON OLIVEIRA (+210)</span>
-                        </div>
-                        <div style="font-size: 0.9rem; opacity: 0.6; margin-top: 0.5rem;">
-                            NO ACTIVE INCIDENT ALERTS
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Innovation News (Placeholder) -->
-            <div id="innovation-news" class="view-section">
-                <h2 class="section-title glitch" data-text="INNOVATION NEWS">INNOVATION NEWS</h2>
-                <div class="glass-panel" style="padding: 3rem; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 50vh;">
-                    <span class="status-indicator" style="width: 15px; height: 15px; margin-bottom: 2rem;"></span>
-                    <h3 style="margin-bottom: 1rem; font-size: 1.5rem; color: #fff; letter-spacing: 2px;">DECRYPTING LATEST TECHNOLOGIES...</h3>
-                    <p style="opacity: 0.7; font-family: monospace;">Data feed synchronization in progress via proxy networks.<br>Please check back later.</p>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <!-- Application Logic -->
     <script>
-        // --- Access Gate Logic ---
-        document.getElementById('app-layout').style.display = 'none'; // Ensure hidden on load
-
-        function verifyAccess() {
-            const keyInput = document.getElementById('access-key').value;
-            const errorMsg = document.getElementById('error-msg');
-            const gate = document.getElementById('access-gate');
-            const appLayout = document.getElementById('app-layout');
-            const btn = document.getElementById('btn-enter');
-
-            if (keyInput === 'Z-2026') {
-                errorMsg.innerText = "ACCESS GRANTED. DECRYPTING UI OBJECTS...";
-                errorMsg.style.color = "#00FF41";
-                btn.style.background = "var(--main-color)";
-                btn.style.color = "#000";
-                
-                setTimeout(() => {
-                    gate.style.opacity = '0';
-                    setTimeout(() => {
-                        gate.style.display = 'none';
-                        appLayout.style.display = 'flex';
-                        initTickers();
-                        initArbitrageScanner();
-                    }, 500);
-                }, 800);
-            } else {
-                errorMsg.innerText = "ACCESS DENIED. INVALID DECRYPTION KEY.";
-                document.getElementById('access-key').value = '';
-                
-                // Glitch shake effect
-                const inputGrp = document.querySelector('.input-group');
-                inputGrp.style.transform = 'translateX(15px)';
-                setTimeout(() => inputGrp.style.transform = 'translateX(-15px)', 50);
-                setTimeout(() => inputGrp.style.transform = 'translateX(10px)', 100);
-                setTimeout(() => inputGrp.style.transform = 'translateX(-10px)', 150);
-                setTimeout(() => inputGrp.style.transform = 'translateX(0)', 200);
-            }
+        function enterApp() {
+            document.getElementById('welcome-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+            // Небольшая задержка для анимации появления
+            window.scrollTo(0,0);
         }
-
-        document.getElementById('access-key').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') verifyAccess();
-        });
-
-        // --- Sidebar Navigation Logic ---
-        function switchView(viewId) {
-            const items = document.querySelectorAll('.nav-items .nav-item');
-            items.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(viewId)) {
-                    item.classList.add('active');
-                }
-            });
-
-            const sections = document.querySelectorAll('.view-section');
-            sections.forEach(sec => {
-                sec.classList.remove('active');
-            });
-            
-            // Force reflow for animation
-            const newSec = document.getElementById(viewId);
-            void newSec.offsetWidth; 
-            newSec.classList.add('active');
-        }
-
-        // --- Trading Terminal Logic ---
-        function initTickers() {
-            const symbols = [
-                { id: 'ticker-btc', base: 64230 },
-                { id: 'ticker-eth', base: 3450 },
-                { id: 'ticker-gold', base: 2340 }
-            ];
-
-            setInterval(() => {
-                symbols.forEach(sym => {
-                    const el = document.getElementById(sym.id);
-                    // Fluctuation between -0.3% and +0.3%
-                    const changePct = (Math.random() * 0.6 - 0.3);
-                    const newPrice = sym.base * (1 + changePct / 100);
-                    sym.base = newPrice; 
-
-                    const valSpan = el.querySelector('.val');
-                    const pctSpan = el.querySelector('.pct');
-                    const changeDiv = el.querySelector('.ticker-change');
-
-                    valSpan.innerText = newPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                    pctSpan.innerText = Math.abs(changePct).toFixed(2);
-                    
-                    if (changePct >= 0) {
-                        changeDiv.className = 'ticker-change up';
-                        changeDiv.innerHTML = `+<span class="pct">${Math.abs(changePct).toFixed(2)}</span>%`;
-                    } else {
-                        changeDiv.className = 'ticker-change down';
-                        changeDiv.innerHTML = `-<span class="pct">${Math.abs(changePct).toFixed(2)}</span>%`;
-                    }
-                });
-            }, 2000); // Fast updates for cyberpunk feel
-        }
-
-        function calculateLiquidation() {
-            const entryStr = document.getElementById('entry-price').value;
-            const leverageStr = document.getElementById('leverage').value;
-            const posType = document.getElementById('position-type').value;
-
-            const entry = parseFloat(entryStr);
-            const lev = parseFloat(leverageStr);
-
-            if (isNaN(entry) || isNaN(lev) || lev <= 0) {
-                document.getElementById('liq-price').innerText = "ERROR";
-                return;
-            }
-
-            let liq = 0;
-            if (posType === 'long') {
-                liq = entry * (1 - (1 / lev));
-            } else {
-                liq = entry * (1 + (1 / lev));
-            }
-
-            // Visual feedback
-            const resVal = document.getElementById('liq-price');
-            resVal.style.opacity = '0';
-            setTimeout(() => {
-                resVal.innerText = liq.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                resVal.style.opacity = '1';
-            }, 200);
-        }
-
-        function initArbitrageScanner() {
-            const logContainer = document.getElementById('arb-log');
-            const exchanges = ['BINANCE', 'KRAKEN', 'COINBASE', 'BITFINEX', 'OKX', 'BYBIT', 'KUCOIN'];
-            const pairs = ['BTC/USDT', 'ETH/USDC', 'SOL/USDT', 'XRP/USD', 'DOGE/USDT', 'LINK/USDT'];
-            let logCount = document.querySelectorAll('.log-line').length;
-
-            setInterval(() => {
-                const ex1 = exchanges[Math.floor(Math.random() * exchanges.length)];
-                let ex2 = exchanges[Math.floor(Math.random() * exchanges.length)];
-                while(ex1 === ex2) ex2 = exchanges[Math.floor(Math.random() * exchanges.length)];
-                
-                const pair = pairs[Math.floor(Math.random() * pairs.length)];
-                const gap = (Math.random() * 1.5 + 0.05).toFixed(2); // 0.05% to 1.55%
-                
-                const timeStr = new Date().toISOString().substring(11, 23); // include ms
-                const isProfitable = gap > 0.6;
-                const isAlert = gap > 1.2;
-                
-                const line = document.createElement('div');
-                line.className = 'log-line';
-                
-                let text = `<span style="opacity:0.6">[${timeStr}]</span> SCAN: ${pair} | ${ex1} -> ${ex2} | GAP: <span class="${isProfitable ? 'log-highlight' : ''} ${isAlert ? 'log-alert' : ''}">${gap}%</span>`;
-                if (isProfitable) {
-                    text += ` <span class="log-execute">[EXECUTE TX: OK]</span>`;
-                }
-                
-                line.innerHTML = text;
-                logContainer.appendChild(line);
-                logCount++;
-
-                // scrolling down
-                const termPane = document.querySelector('.terminal-log');
-                termPane.scrollTop = termPane.scrollHeight;
-
-                if (logCount > 18) {
-                    logContainer.removeChild(logContainer.firstChild);
-                    logCount--;
-                }
-            }, 800); // Very fast updates
-        }
-
-        // --- Politics Dumping Logic ---
-        function postDump() {
-            const input = document.getElementById('dump-input-field');
-            const val = input.value.trim();
-            if (!val) return;
-
-            const stream = document.getElementById('dump-stream');
-            const msg = document.createElement('div');
-            msg.className = 'dump-msg';
-            const randomId = Math.floor(Math.random()*900)+100;
-            // Prevent HTML injection but keep it feeling raw
-            const cleanVal = val.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            
-            msg.innerHTML = `<span class="dump-user">guest_${randomId}:</span> ${cleanVal}`;
-            
-            stream.appendChild(msg);
-            stream.scrollTop = stream.scrollHeight;
-            input.value = '';
-        }
-
-        document.getElementById('dump-input-field').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') postDump();
-        });
-
-        // --- Matrix Digital Rain Canvas ---
-        const canvas = document.getElementById('matrix-bg');
-        const ctx = canvas.getContext('2d');
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-
-        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレゲゼデベペオォコソトノホモヨョロゴゾドボポヴッン';
-        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const nums = '0123456789';
-        const alphabet = katakana + latin + nums;
-
-        const fontSize = 16;
-        let columns = Math.max(Math.floor(canvas.width / fontSize), 1);
-        let drops = [];
-
-        function initMatrix() {
-            columns = Math.max(Math.floor(canvas.width / fontSize), 1);
-            drops = [];
-            for(let x = 0; x < columns; x++) {
-                drops[x] = Math.random() * -100; // stagger starts 
-            }
-        }
-        initMatrix();
-
-        function drawMatrix() {
-            // Translucent black to create fade effect
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.fillStyle = '#0F0';
-            ctx.font = fontSize + 'px monospace';
-
-            for(let i = 0; i < drops.length; i++) {
-                if (drops[i] * fontSize > 0) {
-                    const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-                    // Highlight head of the drop
-                    if (Math.random() > 0.95) {
-                        ctx.fillStyle = '#FFF'; 
-                        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                        ctx.fillStyle = '#0F0'; 
-                    } else {
-                        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                    }
-                }
-
-                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    drops[i] = 0;
-                }
-                drops[i]++;
-            }
-        }
-
-        setInterval(drawMatrix, 40);
-
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            initMatrix();
-        });
-
     </script>
 </body>
 </html>
